@@ -20,6 +20,16 @@ GRANT ALL ON SCHEMA public TO fastapi_user;
 # Проверяем подключение
 psql -h 127.0.0.1 -U fastapi_user -d myapp_db
 
+# Чтобы открыть для подключения к базе не только локальные соединения, нужно добавить правило в pg-hba.conf
+sudo nano /etc/postgresql/16/main/pg_hba.conf
+# IPv6 local connections:
+host    all             all             ::1/128                 scram-sha-256
+# Внешние подключения
+host    all             all             0.0.0.0/0               scram-sha-256
+
+# Проверяем порты и алреса, которые слушает постгрес
+sudo netstat -tlnp | grep 5432
+
 # Рестарт и можно пользоваться
 sudo systemctl restart postgresql
 
