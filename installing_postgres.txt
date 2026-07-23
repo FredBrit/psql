@@ -1,0 +1,23 @@
+# Обновляем список пакетов
+sudo apt update
+
+# Устанавливаем PostgreSQL и дополнительные утилиты
+sudo apt install -y postgresql postgresql-contrib
+
+# Проверяем статус постгреса
+sudo systemctl status postgresql
+
+# Создаем, пользователя, базу данных и накидываем права
+sudo -u postgres psql
+
+CREATE USER fastapi_user WITH PASSWORD 'ваш_сложный_пароль';
+
+CREATE DATABASE myapp_db OWNER fastapi_user;
+
+GRANT ALL ON SCHEMA public TO fastapi_user;
+
+# Проверяем подключение
+psql -h 127.0.0.1 -U fastapi_user -d myapp_db
+
+# Рестарт и можно пользоваться
+sudo systemctl restart postgresql
