@@ -1,3 +1,4 @@
+### Установка одноузлового постгреса без докера
 # Обновляем список пакетов
 sudo apt update
 
@@ -21,3 +22,45 @@ psql -h 127.0.0.1 -U fastapi_user -d myapp_db
 
 # Рестарт и можно пользоваться
 sudo systemctl restart postgresql
+
+
+### Полезные команды
+
+# Зайти в psql под postgres
+sudo -u postgres psql
+
+# Посмотреть список баз
+\l (внутри psql)
+
+# Посмотреть список пользователей
+\du (внутри psql)
+
+# Посмотреть размер базы
+SELECT pg_size_pretty(pg_database_size('myapp_db'));
+
+# Логи PostgreSQL
+sudo tail -f /var/log/postgresql/postgresql-16-main.log
+
+# Рестарт
+sudo systemctl restart postgresql
+
+# Статус
+sudo systemctl status postgresql
+
+
+# Войти в postgres
+sudo su - postgres -c 'psql mi'
+
+# Insert из sql файла сразу в нужную схему, в нужную таблицу
+\i /tmp/tv_mobile_phone_202512160923.sql
+
+# Вставка из csv файла в конкретную схему, конкретную таблицу
+\copy custom.dm_turnover_hour_delta FROM '/tmp/dm_turnover_hour_delta_202512151753.csv' WITH CSV HEADER VERBOSE
+
+# Снятие дампа
+pg_dump -h localhost -U fbritanov -d mi \
+  --table=custom.dm_turnover_hour_delta \
+  --column-inserts \
+  --no-owner --no-privileges \
+  --encoding=UTF8 \
+  -f /tmp/dm_turnover_hour_delta.sql
